@@ -244,22 +244,6 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
-  -- Drag stuff around
-  {
-    'echasnovski/mini.nvim',
-    version = false,
-    config = function()
-      require('mini.move').setup {
-        mappings = {
-          left = '<M-h>',
-          right = '<M-l>',
-          down = '<M-j>',
-          up = '<M-k>',
-        },
-      }
-    end,
-  },
-
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -915,6 +899,16 @@ require('lazy').setup({
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
+      -- Drag stuff around
+      require('mini.move').setup {
+        mappings = {
+          left = '<leader>h',
+          right = '<leader>l',
+          up = '<leader>k',
+          down = '<leader>j',
+        },
+      }
+
       -- Better Around/Inside textobjects
       --
       -- Examples:
