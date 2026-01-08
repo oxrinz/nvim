@@ -166,6 +166,15 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Autoupdate
+vim.fn.jobstart({
+  'git',
+  '-C',
+  vim.fn.stdpath 'config',
+  'pull',
+  '--ff-only',
+}, { detatch = true })
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -234,6 +243,22 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+
+  -- Drag stuff around
+  {
+    'echasnovski/mini.nvim',
+    version = false,
+    config = function()
+      require('mini.move').setup {
+        mappings = {
+          left = '<M-h>',
+          right = '<M-l>',
+          down = '<M-j>',
+          up = '<M-k>',
+        },
+      }
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -392,14 +417,7 @@ require('lazy').setup({
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        -- defaults = {},
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -918,12 +936,6 @@ require('lazy').setup({
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { fg = '#1e1e2e', bg = '#89b4fa', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { fg = '#1e1e2e', bg = '#a6e3a1', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { fg = '#1e1e2e', bg = '#f9e2af', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { fg = '#1e1e2e', bg = '#f38ba8', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommand', { fg = '#1e1e2e', bg = '#cba6f7', bold = true })
 
       statusline.active = function()
         return table.concat {
