@@ -93,6 +93,9 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
+-- Remap terminal exit to something nicer
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -191,15 +194,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -243,7 +237,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  'mg979/vim-visual-multi', -- Multiple cursors
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -904,10 +898,26 @@ require('lazy').setup({
         mappings = {
           left = '<C-h>',
           right = '<C-l>',
-          up = '<C-k>',
-          down = '<C-j>',
+          up = '',
+          down = '',
         },
       }
+
+      -- Normal mode: move the current line
+      vim.keymap.set('n', '<C-j>', function()
+        require('mini.move').move_line 'down'
+      end)
+      vim.keymap.set('n', '<C-k>', function()
+        require('mini.move').move_line 'up'
+      end)
+
+      -- Visual mode: move the selection
+      vim.keymap.set('v', '<C-j>', function()
+        require('mini.move').move_selection 'down'
+      end)
+      vim.keymap.set('v', '<C-k>', function()
+        require('mini.move').move_selection 'up'
+      end)
 
       -- Better Around/Inside textobjects
       --
