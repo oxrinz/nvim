@@ -192,6 +192,11 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('n', '<C-,>', ':bp<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<C-.>', ':bnext<CR>', { desc = 'Next buffer' })
 
+-- Util Keymaps
+vim.api.nvim_create_user_command('Zbr', function()
+  vim.cmd '!zig build run'
+end, {})
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -600,17 +605,16 @@ require('lazy').setup({
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
               group = highlight_augroup,
-              command = 'noh',
+              callback = vim.lsp.buf.clear_references,
             })
 
-            callback =
-              vim.lsp.buf.clear_references, vim.api.nvim_create_autocmd('LspDetach', {
-                group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-                callback = function(event2)
-                  vim.lsp.buf.clear_references()
-                  vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-                end,
-              })
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              callback = function(event2)
+                vim.lsp.buf.clear_references()
+                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+              end,
+            })
           end
 
           -- The following code creates a keymap to toggle inlay hints in your
@@ -894,6 +898,8 @@ require('lazy').setup({
         
         hi StatusLine guibg=#000000 guifg=#ffffff
         hi StatusLineNC guibg=#000000 guifg=#666666
+
+        hi WinSeparator guifg=#000000
         ]]
       end,
     },
