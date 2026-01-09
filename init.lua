@@ -600,6 +600,7 @@ require('lazy').setup({
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
               group = highlight_augroup,
+              command = 'noh',
             })
 
             callback =
