@@ -186,7 +186,9 @@ vim.fn.jobstart({
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', function()
+  vim.diagnostic.open_float(nil, { focus = false })
+end, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Keymap to change buffers with ctrl , and .
 -- Util Keymaps
@@ -247,6 +249,15 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
   'mg979/vim-visual-multi', -- Multiple cursors
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'MunifTanjim/nui.nvim',
+    },
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -431,6 +442,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       vim.keymap.set('n', '<leader>,', ':bp<CR>', { desc = 'Previous buffer' })
       vim.keymap.set('n', '<leader>.', ':bnext<CR>', { desc = 'Next buffer' })
+      vim.keymap.set('n', '<leader>e', function()
+        vim.cmd 'Neotree toggle'
+      end, { desc = 'Toggle file tree' })
       vim.keymap.set('n', '<leader>sh', function()
         builtin.live_grep {
           search_dirs = {
