@@ -258,6 +258,7 @@ require('lazy').setup({
       'MunifTanjim/nui.nvim',
     },
   },
+  { 'tikhomirov/vim-glsl' },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -457,8 +458,13 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
+          previewer = true,
+          layout_strategy = 'horizontal',
+          layout_config = {
+            width = 0.6,
+            height = 0.5,
+            prompt_position = 'top',
+          },
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
@@ -765,6 +771,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        glsl = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -973,7 +980,7 @@ require('lazy').setup({
     build = ':TSUpdate',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'glsl' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
