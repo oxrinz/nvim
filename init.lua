@@ -257,6 +257,13 @@ require('lazy').setup({
       'nvim-tree/nvim-web-devicons',
       'MunifTanjim/nui.nvim',
     },
+    opts = {
+      window = {
+        mappings = {
+          ['<Esc>'] = 'close_window',
+        },
+      },
+    },
   },
   { 'tikhomirov/vim-glsl' },
   -- NOTE: Plugins can also be added by using a table,
@@ -444,12 +451,18 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>,', ':bp<CR>', { desc = 'Previous buffer' })
       vim.keymap.set('n', '<leader>.', ':bnext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<leader>e', function()
-        vim.cmd 'Neotree toggle'
+        require('neo-tree.command').execute {
+          action = 'focus',
+          source = 'filesystem',
+          position = 'float',
+          reveal = true,
+        }
       end, { desc = 'Toggle file tree' })
       vim.keymap.set('n', '<leader>sh', function()
         builtin.live_grep {
           search_dirs = {
             '/usr/include',
+            '/opt/homebrew/include',
           },
         }
       end, { desc = '[S]earch [H]eaders' })
