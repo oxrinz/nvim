@@ -265,7 +265,34 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'jackMort/ChatGPT.nvim',
+    dependencies = {
+      'MunifTanjin/nui.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('chatgpt').setup {}
+    end,
+  },
   { 'tikhomirov/vim-glsl' },
+  {
+    'smoka7/hop.nvim',
+    version = '*',
+    opts = {
+      keys = 'etovxqpdygfblzhckisuran',
+    },
+  },
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    cmd = { 'Spectre', 'SpectreWord', 'SpectreVisual' },
+    config = function()
+      require('spectre').setup {}
+    end,
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -447,10 +474,12 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader><leader>', '<cmd>HopWord<CR>', { desc = '[ ] Hop Word' })
       vim.keymap.set('n', '<leader>,', ':bp<CR>', { desc = 'Previous buffer' })
       vim.keymap.set('n', '<leader>.', ':bnext<CR>', { desc = 'Next buffer' })
-      vim.keymap.set('n', '<leader>e', function()
+      vim.keymap.set('n', '<leader>cc', '<cmd>ChatGPT<CR>', { desc = 'Toggle ChatGPT chat' })
+      vim.keymap.set('n', '<leader>S', '<cmd>Spectre<CR>', { desc = 'Toggle ' })
+      vim.keymap.set('n', '<leader>t', function()
         require('neo-tree.command').execute {
           action = 'focus',
           source = 'filesystem',
@@ -688,6 +717,10 @@ require('lazy').setup({
         gopls = {},
         rust_analyzer = {},
         zls = {},
+        svelte = {},
+        pyright = {},
+        solargraph = {},
+        clojure_lsp = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -732,6 +765,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ruff',
+        'rubocop',
+        'clojure-lsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -786,7 +822,9 @@ require('lazy').setup({
         lua = { 'stylua' },
         glsl = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'ruff_format' },
+        ruby = { 'rubocop' },
+        clojure = { lsp_format = 'prefer' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -1034,6 +1072,25 @@ require('lazy').setup({
     branch = 'v0.3',
     config = function()
       require('distant'):setup()
+    end,
+  },
+  { 'Olical/conjure', ft = { 'clojure', 'fennel', 'janet', 'racket', 'scheme', 'guile' } },
+  {
+    'HiPhish/rainbow-delimiters.nvim',
+    config = function()
+      local rainbow = require('rainbow-delimiters')
+      vim.g.rainbow_delimiters = {
+        strategy = { [''] = rainbow.strategy['global'] },
+        query = { [''] = 'rainbow-delimiters', clojure = 'rainbow-delimiters' },
+      }
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterRed',    { fg = '#E06C75' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterYellow',  { fg = '#E5C07B' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterBlue',    { fg = '#61AFEF' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterOrange',  { fg = '#D19A66' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterGreen',   { fg = '#98C379' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterViolet',  { fg = '#C678DD' })
+      vim.api.nvim_set_hl(0, 'RainbowDelimiterCyan',    { fg = '#56B6C2' })
+      vim.api.nvim_set_hl(0, 'MatchParen', { fg = '#FFD700', bold = true, underline = true })
     end,
   },
 
