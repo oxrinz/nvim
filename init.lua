@@ -715,6 +715,7 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         gopls = {},
+        elixirls = {},
         rust_analyzer = {},
         zls = {},
         svelte = {},
@@ -742,6 +743,19 @@ require('lazy').setup({
           },
         },
       }
+
+      require('lspconfig').gleam.setup {
+        capabilities = capabilities,
+      }
+
+      vim.filetype.add({ extension = { gleam = 'gleam' } })
+
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+        pattern = '*.gleam',
+        callback = function()
+          vim.treesitter.start()
+        end,
+      })
 
       require('lspconfig').dartls.setup {
         cmd = { 'dart', 'language-server', '--protocol=lsp' },
@@ -1031,7 +1045,7 @@ require('lazy').setup({
     build = ':TSUpdate',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'glsl', 'svelte' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'glsl', 'svelte', 'elixir', 'heex', 'gleam' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
